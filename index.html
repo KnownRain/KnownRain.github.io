@@ -640,16 +640,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <input type="text" placeholder="您的姓名" required>
-                        <input type="email" placeholder="您的邮箱" required>
-                        <input type="text" placeholder="主题" required>
-                        <textarea placeholder="您的留言" required></textarea>
-                        <button type="submit" class="btn">发送消息</button>
-                    </form>
-                </div>
             </div>
         </div>
     </section>
@@ -697,13 +687,6 @@
                     });
                 }
             });
-        });
-        
-        // 表单提交处理
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('感谢您的留言！我会尽快回复您。');
-            this.reset();
         });
         
         // 导航栏滚动效果
