@@ -412,32 +412,42 @@
                 gap: 20px;
             }
         }
-        /* ================================ */
-        /* 移动端菜单显示/隐藏的核心样式 */
-        /* ================================ */
         
-        /* 默认情况下，在移动端隐藏导航菜单 */
+        /* ================================ */
+        /* 移动端菜单 - 带平滑动画的版本 */
+        /* ================================ */
         @media (max-width: 768px) {
             .nav-links {
-                display: none; /* 关键：默认隐藏 */
+                /* 初始状态：完全透明，并向上偏移10像素隐藏 */
+                opacity: 0;
+                transform: translateY(-10px);
+                /* 设置过渡效果，作用于opacity和transform属性，持续0.3秒，缓动函数使动画更自然 */
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                
+                /* 布局和视觉样式保持不变 */
+                display: flex;
                 position: absolute;
-                top: 100%; /* 紧贴header下方 */
+                top: 100%;
                 left: 0;
                 width: 100%;
-                background-color: white; /* 背景色，可根据您的设计调整 */
+                background-color: white;
                 flex-direction: column;
                 padding: 20px 0;
                 box-shadow: 0 10px 15px rgba(0,0,0,0.1);
                 z-index: 1000;
                 text-align: center;
+                
+                /* 关键：利用透明度隐藏元素，同时为过渡创造条件 */
+                visibility: hidden; /* 使元素不可交互，但仍在文档流中 */
+                pointer-events: none; /* 禁止鼠标事件 */
             }
-        }
-        
-        /* 当 .active 类被添加时，显示菜单 */
-        /* 这行代码是点击后菜单能出现的唯一原因 */
-        @media (max-width: 768px) {
+            
+            /* 激活状态：完全不透明，回到原位 */
             .nav-links.active {
-                display: flex; /* 关键：激活时显示为flex布局 */
+                opacity: 1;
+                transform: translateY(0);
+                visibility: visible; /* 恢复可交互性 */
+                pointer-events: auto; /* 恢复鼠标事件 */
             }
         }
     </style>
@@ -724,54 +734,24 @@
     </footer>
 
 <script>
-    // 等待DOM完全加载后执行
+    // 移动端菜单功能
     document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
         
-        // 1. 精准获取DOM元素
-        const menuToggleButton = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-links');
-        
-        // 调试：在控制台确认找到的元素
-        console.log('菜单按钮:', menuToggleButton);
-        console.log('导航菜单:', navMenu);
-        console.log('菜单按钮的HTML:', menuToggleButton?.outerHTML);
-        console.log('导航菜单的HTML:', navMenu?.outerHTML);
-        
-        // 2. 安全判断：确保元素存在
-        if (!menuToggleButton || !navMenu) {
-            console.error('错误：未找到 .menu-toggle 按钮或 .nav-links 菜单。');
-            return; // 如果元素不存在，停止执行
+        // 1. 点击菜单按钮切换菜单
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+            
+            // 2. 点击页面其他地方（非菜单区域）关闭菜单
+            document.addEventListener('click', function(event) {
+                if (!menuToggle.contains(event.target) && !navLinks.contains(event.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
         }
-        
-        // 3. 绑定点击事件（使用更可靠的事件监听方式）
-        menuToggleButton.addEventListener('click', handleMenuToggle);
-        
-        // 4. 事件处理函数
-        function handleMenuToggle(event) {
-            console.log('✅ 菜单按钮被点击！');
-            
-            // 核心：切换菜单的显示状态
-            navMenu.classList.toggle('active');
-            
-            // 可选：为按钮本身也添加一个激活状态，用于改变图标（如三条杠变叉）
-            // this.classList.toggle('is-active');
-            
-            // 可选：阻止事件冒泡，避免与页面上其他可能的事件冲突
-            // event.stopPropagation();
-        }
-        
-        // 5. 增强功能：点击菜单外的任意区域，关闭菜单
-        document.addEventListener('click', function(event) {
-            // 如果点击的不是菜单按钮，也不是菜单本身
-            if (!menuToggleButton.contains(event.target) && !navMenu.contains(event.target)) {
-                // 则移除菜单的激活状态
-                navMenu.classList.remove('active');
-                // 如果之前为按钮添加了激活状态，也一并移除
-                // menuToggleButton.classList.remove('is-active');
-            }
-        });
-        
-        console.log('移动端菜单脚本初始化完成。');
     });
 </script>
 </body>
