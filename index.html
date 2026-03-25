@@ -696,23 +696,54 @@
     </footer>
 
 <script>
-    // 最小化测试 - 仅检测点击事件
+    // 等待DOM完全加载后执行
     document.addEventListener('DOMContentLoaded', function() {
-        var btn = document.querySelector('.menu-toggle');
-        var menu = document.querySelector('.nav-links');
         
-        console.log("测试脚本已加载。");
-        console.log("找到按钮：", btn);
-        console.log("找到菜单：", menu);
+        // 1. 精准获取DOM元素
+        const menuToggleButton = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-links');
         
-        if (btn && menu) {
-            btn.addEventListener('click', function() {
-                console.log("✅ 成功！菜单按钮被点击。");
-                menu.classList.toggle('active'); // 尝试切换菜单
-            });
-        } else {
-            console.error("❌ 错误：未找到 .menu-toggle 或 .nav-links 元素");
+        // 调试：在控制台确认找到的元素
+        console.log('菜单按钮:', menuToggleButton);
+        console.log('导航菜单:', navMenu);
+        console.log('菜单按钮的HTML:', menuToggleButton?.outerHTML);
+        console.log('导航菜单的HTML:', navMenu?.outerHTML);
+        
+        // 2. 安全判断：确保元素存在
+        if (!menuToggleButton || !navMenu) {
+            console.error('错误：未找到 .menu-toggle 按钮或 .nav-links 菜单。');
+            return; // 如果元素不存在，停止执行
         }
+        
+        // 3. 绑定点击事件（使用更可靠的事件监听方式）
+        menuToggleButton.addEventListener('click', handleMenuToggle);
+        
+        // 4. 事件处理函数
+        function handleMenuToggle(event) {
+            console.log('✅ 菜单按钮被点击！');
+            
+            // 核心：切换菜单的显示状态
+            navMenu.classList.toggle('active');
+            
+            // 可选：为按钮本身也添加一个激活状态，用于改变图标（如三条杠变叉）
+            // this.classList.toggle('is-active');
+            
+            // 可选：阻止事件冒泡，避免与页面上其他可能的事件冲突
+            // event.stopPropagation();
+        }
+        
+        // 5. 增强功能：点击菜单外的任意区域，关闭菜单
+        document.addEventListener('click', function(event) {
+            // 如果点击的不是菜单按钮，也不是菜单本身
+            if (!menuToggleButton.contains(event.target) && !navMenu.contains(event.target)) {
+                // 则移除菜单的激活状态
+                navMenu.classList.remove('active');
+                // 如果之前为按钮添加了激活状态，也一并移除
+                // menuToggleButton.classList.remove('is-active');
+            }
+        });
+        
+        console.log('移动端菜单脚本初始化完成。');
     });
 </script>
 </body>
