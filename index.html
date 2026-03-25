@@ -412,6 +412,34 @@
                 gap: 20px;
             }
         }
+        /* ================================ */
+        /* 移动端菜单显示/隐藏的核心样式 */
+        /* ================================ */
+        
+        /* 默认情况下，在移动端隐藏导航菜单 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* 关键：默认隐藏 */
+                position: absolute;
+                top: 100%; /* 紧贴header下方 */
+                left: 0;
+                width: 100%;
+                background-color: white; /* 背景色，可根据您的设计调整 */
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                z-index: 1000;
+                text-align: center;
+            }
+        }
+        
+        /* 当 .active 类被添加时，显示菜单 */
+        /* 这行代码是点击后菜单能出现的唯一原因 */
+        @media (max-width: 768px) {
+            .nav-links.active {
+                display: flex; /* 关键：激活时显示为flex布局 */
+            }
+        }
     </style>
 </head>
 <body>
