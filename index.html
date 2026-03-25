@@ -696,9 +696,37 @@
     </footer>
 
     <script>
-        // 移动端菜单切换
-        document.querySelector('.menu-toggle').addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('active');
+        // 移动端菜单切换 (修复版)
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    // 可选：添加一个视觉反馈，比如切换菜单图标
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                    }
+                });
+                
+                // 点击导航链接后，在移动端自动关闭菜单
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        // 恢复菜单图标为默认状态（三条杠）
+                        const icon = menuToggle.querySelector('i');
+                        if (icon.classList.contains('fa-times')) {
+                            icon.classList.replace('fa-times', 'fa-bars');
+                        }
+                    });
+                });
+            } else {
+                console.error('未找到菜单切换元素，请检查HTML结构。');
+            }
         });
         
         // 平滑滚动
